@@ -7,6 +7,7 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import '../static/style/pages/detailed.css'
+import Axios from 'axios'
 
 
 const Detailed = () => (
@@ -52,5 +53,20 @@ const Detailed = () => (
     <Footer/>
   </>
 )
+
+Detailed.getInitialProps = async(context)=>{
+
+  console.log(context.query.id)
+  let id = context.query.id
+  const promise = new Promise((resolve)=>{
+    Axios('http://127.0.0.1:7001/default/getArticleById?id='+id).then((res) => {
+        console.log(res.data.data)
+        resolve(res.data.data)
+      }
+    )
+  })
+
+  return await promise
+}
 
 export default Detailed
