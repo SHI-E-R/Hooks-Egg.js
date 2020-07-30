@@ -37,6 +37,10 @@ class HomeController extends Controller {
       data: results,
     };
   }
+  async getTypeInfo() {
+    const results = await this.app.mysql.select('type');
+    this.ctx.body = { data: results };
+  }
 }
 
 module.exports = HomeController;
