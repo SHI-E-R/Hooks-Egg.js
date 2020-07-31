@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import marked from 'marked'
+import hljs from "highlight.js"
+import 'highlight.js/styles/monokai-sublime.css'
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../components/Header'
@@ -26,6 +29,25 @@ import Axios from 'axios'
 // }
 
 const Home = (list) => {
+
+  const renderer = new marked.Renderer();
+  marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    sanitize: false,
+    tables: true,
+    breaks: false,
+    smartLists: true,
+    smartypants: false,
+    sanitize:false,
+    xhtml: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value
+    }
+
+  });
+
   const [ myList, setMylist ] = useState(list.data)
   console.log(list)
   return (
@@ -53,7 +75,7 @@ const Home = (list) => {
                     <span><Icon type="folder" />{item.type_name}</span>
                     <span><Icon type="fire" />{item.view_count}人</span>
                   </div>
-                  <div className="list-context">{item.introduce}</div>
+                  <div className="list-context" dangerouslySetInnerHTML={{__html:marked(item.introduce)}}></div>
                 </List.Item>
               )}
             />    
