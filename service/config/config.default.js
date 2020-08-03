@@ -45,9 +45,10 @@ module.exports = appInfo => {
   };
 
   config.cors = {
-    origin: '*',
+    origin: 'http://localhost:3000',
+    credentials: true,
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-  }
+  };
 
   // add your user config here
   const userConfig = {
