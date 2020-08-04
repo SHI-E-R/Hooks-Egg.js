@@ -1,14 +1,18 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
+import { useHistory } from 'react-router-dom';
 import marked from 'marked'
 import '../static/css/AddArticle.css'
-import { Row, Col ,Input, Select ,Button ,DatePicker } from 'antd'
+import { Row, Col ,Input, Select ,Button ,DatePicker, message } from 'antd'
 import { divide } from 'lodash';
+import Axios from 'axios';
+import servicePath from '../config/apiUrl';
 
 const { Option } = Select
 const { TextArea } = Input
 
 function AddArticle() {
 
+  const history = useHistory()
   const [articleId,setArticleId] = useState(0)  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
   const [articleTitle,setArticleTitle] = useState('')   //文章标题
   const [articleContent , setArticleContent] = useState('')  //markdown的编辑内容
@@ -31,6 +35,10 @@ function AddArticle() {
     smartypants: false,
   })
 
+  useEffect(() => {
+    getTypeInfo()
+  }, []);
+
   const changeContent = (e)=>{
     setArticleContent(e.target.value)
     let html=marked(e.target.value)
@@ -41,6 +49,22 @@ function AddArticle() {
      setIntroducemd(e.target.value)
      let html=marked(e.target.value)
      setIntroducehtml(html)
+  }
+
+  const getTypeInfo = () => {
+    Axios({
+      method: 'get',
+      url: servicePath.getTypeInfo,
+      header: { 'Access-Control-Allow-Origin':'*' },
+      withCredentials: true
+    }).then(res => {
+      if (res.data.data === '没有登录') {
+        localStorage.removeItem('openId')
+        history.push('/')
+      } else {
+        setTypeInfo(res.data.data)
+      }
+    })
   }
 
   return (
@@ -55,8 +79,14 @@ function AddArticle() {
             </Col>
             <Col span={4}>
               &nbsp;
-              <Select defaultValue="Sign Up" size="large">
-                <Option value="Sign Up">视频教程</Option>
+              <Select defaultValue={selectedType} size="large">
+                {
+                  typeInfo.map(item => {
+                    return (
+                      <Option key={item.id} value={item.id}>{item.type_name}</Option>
+                    )
+                  })
+                }
               </Select>
             </Col>
           </Row>

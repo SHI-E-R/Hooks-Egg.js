@@ -25,7 +25,6 @@ function Login() {
   useEffect(() => {
     document.addEventListener("keypress", handleEnterKey)
     return () => {
-      console.log('woshanl')
       document.removeEventListener("keypress", handleEnterKey)
     }
   }, [])

@@ -19,6 +19,10 @@ class MainController extends Controller {
       this.ctx.body = { data: '登录失败' };
     }
   }
+  async getTypeInfo() {
+    const resType = await this.app.mysql.select('type');
+    this.ctx.body = { data: resType };
+  }
 }
 
 module.exports = MainController;
